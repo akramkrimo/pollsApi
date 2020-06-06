@@ -1,21 +1,16 @@
-version: 2.1
 
-orbs:
-  python: circleci/python@0.2.1
-
+version: 2
 jobs:
-  build-and-test:
-    executor: python/default
-    steps:
-      - checkout
-      - python/load-cache
-      - python/install-deps
-      - python/save-cache
-      - run:
-          command: ./manage.py test
-          name: Test
+  build: #use the name of the root directory
+    working_directory: ~/circleci-demo-python-django
+    
+    docker:
+      - image: circleci/python:3.8
 
-workflows:
-  main:
-    jobs:
-      - build-and-test
+    steps:
+      - checkout #checkout source code to working directory, meaning that it makes a copy of it
+      - run:
+          command: | # use venv to install dependencies
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r circleci-demo-python-django/requirements.txt
